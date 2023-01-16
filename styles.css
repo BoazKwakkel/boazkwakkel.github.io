@@ -17,3 +17,8 @@
     border: 0;
 }
 
+.main-image {
+    position: absolute;
+    height: 100;
+    width: 100;
+}
