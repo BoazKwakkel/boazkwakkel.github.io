@@ -1,0 +1,19 @@
+.top-header { 
+	width: 100%; 
+	background-image: url("http://lh6.ggpht.com/1gH99j2GD85SW4r3CA18uwTDuRioMYTNZlH5N2xuZsbh_4QUnzxettm6WqCsLa_ciGCzhWwLzF35QtHEpz4M9LWv_yvl=w320"); 
+	background-size: cover; 
+	background-position: center; 
+    min-height: 260px;
+    height: 50vmin;
+    max-height: 510px;
+    display: block;
+} 
+ 
+
+.offset-parent {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+

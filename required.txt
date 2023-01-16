@@ -1,0 +1,5 @@
+add: poster, video
+
+
+send link to q42 with everything
+doesn't need to be tooo documented and clean if we don't expect reimplementation
