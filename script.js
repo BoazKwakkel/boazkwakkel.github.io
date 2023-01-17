@@ -3,17 +3,18 @@
 // TODO: Linking clickable rectangle areas on main image to image choice -> trigger random_imglink function
 
 
+document.write(`<img class="div1 main-image" src='paintings/img_${Math.floor(Math.random()*311)}.jpg' onclick="toggle()"></img>`)
+
 /**
  * Generates random choice of images to view from our image folder
  * Makes use of local folder /paintings at the moment!
  */
 function random_imglink() {
-
     for (let i = 1; i < 7; i++) {
         var ry=Math.floor(Math.random()*311)
 
         // Write into DOM
-        document.write(`<img class="div${i+1} choices"src="paintings/img_${ry}.jpg" style="display: none">`)
+        document.write(`<img class="div${i+1} choices"src="paintings/img_${ry}.jpg" style="display: none" onclick=switchImg(el)>`)
     }
 }
 
@@ -37,4 +38,9 @@ function toggle() {
             el.style.display = 'none'
           }
     })
+}
+
+function switchImg(el) {
+    console.log(el)
+    //document.querySelector(".main-image")
 }
