@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>StudioLinked Explore Page</title>
+    <title>StudioLinked</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -10,49 +10,25 @@
     </header>
     <p>Demo version of the StudioLinked platform conducted for the University of Amsterdam.</p>
     <div class="parent">
-        <img class="div1" src="paintings/img_0.jpg">
-        <script type="module">
+      <!-- Main image where users will be able to click on -->
+      <img class="div1" src="paintings/img_0.jpg">
+        <script>
 
-          // Require doesn't work smh?!??!?!?!
-          var fs = require('fs');
-          var path = require('path');
+          // Generates random choice of images to view from our image folder
+          function random_imglink() {
 
-          // In newer Node.js versions where process is already global this isn't necessary.
-          var process = require("process");
+            for (let i = 1; i < 7; i++) {
+              var ry=Math.floor(Math.random()*311)
 
-
-          function random_imglink(){
-          
-            // Write into new array
-            var myimages=new Array(
-
-              // Walk through dir and get all files from it
-              fs.readdir('paintings/', function(err, files) {
-                if (err) {
-                  console.error("Could not list the directory.", err);
-                  process.exit(1);
-                  };
-                }
-              )
-            )
-          
-            // Generate images
-            for (i = 1; i < 8; i++) {
-              var ry=Math.floor(Math.random()*myimages.length)
-              document.write(`<img class="div${i}'"src="myimages[${ry}]" >`)
+              // Write into DOM
+              document.write(`<img class="div${i+1}"src="paintings/img_${ry}.jpg" >`)
             }
-          
           }
-          random_imglink()
-          </script>
-        <!-- <img class="div2" src="paintings/img_0.jpg">
-        <img class="div3" src="paintings/img_0.jpg"> 
-        <img class="div4" src="paintings/img_0.jpg">
-        <img class="div5" src="paintings/img_0.jpg">
-        <img class="div6" src="paintings/img_0.jpg">
-        <img class="div7" src="paintings/img_0.jpg"> -->
-    </div>
 
+          // Call function
+          random_imglink()
+        </script>
+      </div>
     </div>
   </body>
 </html>
