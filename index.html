@@ -11,23 +11,8 @@
     <p>Demo version of the StudioLinked platform conducted for the University of Amsterdam.</p>
     <div class="parent">
       <!-- Main image where users will be able to click on -->
-      <img class="div1" src="paintings/img_0.jpg">
-        <script>
-
-          // Generates random choice of images to view from our image folder
-          function random_imglink() {
-
-            for (let i = 1; i < 7; i++) {
-              var ry=Math.floor(Math.random()*311)
-
-              // Write into DOM
-              document.write(`<img class="div${i+1}"src="paintings/img_${ry}.jpg" >`)
-            }
-          }
-
-          // Call function
-          random_imglink()
-        </script>
+      <img class="div1 main-image" src="paintings/img_0.jpg" onclick="toggle()">
+        <script src="script.js"></script>
       </div>
     </div>
   </body>
