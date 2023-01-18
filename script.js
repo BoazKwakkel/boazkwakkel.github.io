@@ -42,7 +42,7 @@ function make_clickable() {
             change_main_img(img.src); 
             change_random_imgs();
         })
-      });
+    });
 }
 
 /**
@@ -74,9 +74,9 @@ function toggle() {
         
         // Toggle visibility of images depending on their state
         if (el.style.display == 'none') {
-            el.style.display = 'block'
+            el.style.display = 'block';
         } else {
-            el.style.display = 'none'
+            el.style.display = 'none';
         }
     })
 }
@@ -92,6 +92,9 @@ function toggle() {
 
 // Generate main image in page
 document.write(`<img class="div1 main-image" src='paintings/img_${Math.floor(Math.random()*311)}.jpg' onclick="toggle()"></img>`)
+
+// Change to src from internet
+// document.write('<img class="div1 main-image" src="https://lh3.ggpht.com/czrFlLp1GVWctRoejlSg75vMgBENE_s4uNYe34yJbGkQkNAIEpElJFlLZUZ4C_MEZo-ZaWBro-ygFIg8qt4JP8ojUMk=s0" onclick="toggle()">')
 
 // Add links to random images
 add_random_imglink();
