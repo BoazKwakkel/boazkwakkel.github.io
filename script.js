@@ -1,14 +1,12 @@
-// TODO: Making tiny images clickable so that they become main image
+// REQUIRED: Database with img ID, location, information about img
+
+// TODO: Read data from DB to display information for img
 // TODO: Generating clickable rectangle areas on main image
 // TODO: Linking clickable rectangle areas on main image to image choice -> trigger random_imglink function
 
-//document.write(`<img class="div1 main-image" src='paintings/img_${Math.floor(Math.random()*311)}.jpg' onclick="toggle()"></img>`)
-
-
-
 
 /**
- * Changes main image in page
+ * Changes main image in page based on which tiny img has been clicked earlier
  * Makes use of local folder /paintings at the moment!
  */
 function change_main_img(img = `paintings/img_${Math.floor(Math.random()*311)}.jpg`) {
@@ -22,7 +20,7 @@ function change_main_img(img = `paintings/img_${Math.floor(Math.random()*311)}.j
  */
 function change_random_imgs() {
 
-    // Get all imgs
+    // Get all imgs and change to new random choice
     [...document.querySelectorAll('.choices')].forEach((img) => {
         img.src = `paintings/img_${Math.floor(Math.random()*311)}.jpg`
     });
@@ -35,7 +33,11 @@ function change_random_imgs() {
  * Makes them clickable so that once clicked, main image will be changed to clicked image
  */
 function make_clickable() {
+
+    // Search for 6 imgs to chose from
     [...document.querySelectorAll('.choices')].forEach((img) => {
+
+        // When clicked, change clicked img to main img and display new img choice to chose from
         img.addEventListener('click', () => {
             change_main_img(img.src); 
             change_random_imgs();
@@ -48,23 +50,17 @@ function make_clickable() {
  * Makes use of local folder /paintings at the moment!
  */
 function add_random_imglink() {
+    // TODO: Make this choice dependent on data from DB and main img
     for (let i = 1; i < 7; i++) {
         var ry=Math.floor(Math.random()*311)
 
         // Write into DOM
         document.write(`<img class="div${i+1} choices" id="${i+1}" src="paintings/img_${ry}.jpg" style="display: none">`)
     }
+    
+    // Add click interaction to images
     make_clickable();
 }
-
-
-    // for (let i = 1; i < 7; i++) {
-    //     var ry=Math.floor(Math.random()*311)
-
-    //     // Write into DOM
-    //     document.write(`<img class="div${i+1} choices" id="${i+1}" src="paintings/img_${ry}.jpg" style="display: none">`)
-    //}
-
 
 
 /**
@@ -93,19 +89,9 @@ function toggle() {
  * 
  * When page is fully loaded, make small images clickable
  */
+
 // Generate main image in page
 document.write(`<img class="div1 main-image" src='paintings/img_${Math.floor(Math.random()*311)}.jpg' onclick="toggle()"></img>`)
 
-// Add links to random imagess
+// Add links to random images
 add_random_imglink();
-
-
-//make_clickable();
-//  window.addEventListener('load', () => {
-    
-    
-//     // Call function to generate images
-//     add_main_img();
-//     random_imglink();
-//     make_clickable();
-// });
