@@ -4,14 +4,30 @@
 
 //document.write(`<img class="div1 main-image" src='paintings/img_${Math.floor(Math.random()*311)}.jpg' onclick="toggle()"></img>`)
 
+
+
+
 /**
  * Changes main image in page
  * Makes use of local folder /paintings at the moment!
  */
 function change_main_img(img = `paintings/img_${Math.floor(Math.random()*311)}.jpg`) {
+    change_random_imgs()
     document.querySelector('.div1').src=`${img}`
-    random_imglink()
 }
+
+/**
+ * Changes random choice of imgs after main image has been chosen
+ * Makes use of local folder /paintings at the moment!
+ */
+function change_random_imgs() {
+
+    // Get all imgs
+    [...document.querySelectorAll('.choices')].forEach((img) => {
+        img.src = `paintings/img_${Math.floor(Math.random()*311)}.jpg`
+    });
+};
+
 
 
 /**
@@ -20,7 +36,10 @@ function change_main_img(img = `paintings/img_${Math.floor(Math.random()*311)}.j
  */
 function make_clickable() {
     [...document.querySelectorAll('.choices')].forEach((img) => {
-        img.addEventListener('click', () => change_main_img(img.src), change_random_imgs())
+        img.addEventListener('click', () => {
+            change_main_img(img.src); 
+            change_random_imgs();
+        })
       });
 }
 
@@ -39,13 +58,6 @@ function add_random_imglink() {
 }
 
 
-function change_random_imgs() {
-
-    // Get all imgs
-    [...document.querySelectorAll('.choices')].forEach((img) => {
-        img.src = `paintings/img_${Math.floor(Math.random()*311)}.jpg`
-    });
-};
     // for (let i = 1; i < 7; i++) {
     //     var ry=Math.floor(Math.random()*311)
 
