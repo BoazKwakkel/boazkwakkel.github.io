@@ -3,7 +3,14 @@
 // TODO: Linking clickable rectangle areas on main image to image choice -> trigger random_imglink function
 
 
-document.write(`<img class="div1 main-image" src='paintings/img_${Math.floor(Math.random()*311)}.jpg' onclick="toggle()"></img>`)
+/**
+ * Generate main image in page
+ * Makes use of local folder /paintings at the moment!
+ */
+function add_main_img(img = `paintings/img_${Math.floor(Math.random()*311)}`) {
+    document.write(`<img class="div1 main-image" src='${img}' onclick="toggle()"></img>`)
+}
+
 
 /**
  * Generates random choice of images to view from our image folder
@@ -14,12 +21,11 @@ function random_imglink() {
         var ry=Math.floor(Math.random()*311)
 
         // Write into DOM
-        document.write(`<img class="div${i+1} choices"src="paintings/img_${ry}.jpg" style="display: none" onclick=switchImg(el)>`)
+        document.write(`<img class="div${i+1} choices" id="${i+1}" src="paintings/img_${ry}.jpg" style="display: none">`)
     }
 }
 
-// Call function to generate images
-random_imglink()
+
 
 
 /**
@@ -34,13 +40,32 @@ function toggle() {
         // Toggle visibility of images depending on their state
         if (el.style.display == 'none') {
             el.style.display = 'block'
-          } else {
+        } else {
             el.style.display = 'none'
-          }
+        }
     })
 }
 
-function switchImg(el) {
-    console.log(el)
-    //document.querySelector(".main-image")
+
+function make_clickable() {
+    [...document.querySelectorAll('.choices')].forEach((img) => {
+        img.addEventListener('click', () => add_main_img(img.src))
+        // {
+        //   document.querySelector('.div1').src = img.src;
+        // });
+      });
 }
+
+/*************************************************************************************************/
+/** LIKE MAIN
+ * 
+ * When page is fully loaded, make small images clickable
+ */
+ window.addEventListener('DOMContentLoaded', (event) => {
+    
+    
+    // Call function to generate images
+    add_main_img();
+    random_imglink()
+    make_clickable();
+});
