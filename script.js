@@ -45,8 +45,9 @@ function change_main_img(src, sequence = '0') {
             'Access-Control-Allow-Origin': 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
     }})
         .then((response) => response.text())
-        .then((data) => console.log(data.split('\n')));
-    
+        .then((data) => data.split(/[\n\r]+/g))
+        .then((array) => array.map(v => get_coords(v.split().map(c => parseFloat(c) ))))
+        .then((array_of_arrays) => create_box())
 }
  
 /**
@@ -100,19 +101,24 @@ function add_random_imglink() {
     change_random_imgs();   
 }
 
-
-function get_coords() {
-    var coords = [0.947864, 0.797727, 0.100084, 0.159091]
+/**
+* Prepares coordinates to become area
+*/
+function get_coords(coords) {
 
     // Multiply output times width and height from given image
-    const img = document.querySelector(".img0");
-    const width = img.width;
-    const height = img.height;
-    console.log([width * coords[0], height * coords[1], width * coords[2], height * coords[3]])
+    const img = document.querySelector("#i0");
+    return [coords[0], img.width * coords[1], img.height * coords[2], img.width * coords[3], img.height * coords[4]]
 }
 
-function create_box() {
 
+/**
+* Takes array of arrays
+* Creates clickable area boxes on main image
+*/
+function create_box(array_of_arrays) {
+    console.log(array_of_arrays)
+    //array_of_arrays.forEach()
 }
 
  
