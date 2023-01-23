@@ -26,7 +26,7 @@ const imgpath = (i) => `paintings/img_${ i }.jpg`;
 * Changes main image in page based on which tiny img has been clicked earlier
 * Makes use of local folder /paintings at the moment!
 */
-function change_main_img(src, id = 'i0') {
+function change_main_img(src, sequence = '0') {
     //change_random_imgs()
     document.querySelector('#i0').src = src;
     
@@ -37,7 +37,7 @@ function change_main_img(src, id = 'i0') {
     const origin = './labels'
 
     // TODO: Fix issue that it looks for img_i0.txt
-    fetch(`${origin}/img_${id}.txt`, {
+    fetch(`${origin}/img_${sequence}.txt`, {
         method: 'GET',
         //mode: 'cors',
         headers : {
@@ -62,11 +62,11 @@ function change_random_imgs() {
     // Get all imgs and change to new random choice
     images.forEach((img, i) => {
         img.src = imgpath(indexes[i]);
+        img.setAttribute('img-sequence', indexes[i]);
     });
-};
- 
- 
- 
+}; 
+
+
 /**
 * Searches for images in document
 * Makes them clickable so that once clicked, main image will be changed to clicked image
@@ -78,7 +78,7 @@ function make_clickable() {
  
         // When clicked, change clicked img to main img and display new img choice to chose from
         img.addEventListener('click', () => {
-            change_main_img(img.src, img.id);
+            change_main_img(img.src, img.getAttribute('img-sequence'));
             change_random_imgs();
         })
     });
