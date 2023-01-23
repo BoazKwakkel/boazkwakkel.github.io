@@ -26,17 +26,23 @@ const imgpath = (i) => `paintings/img_${ i }.jpg`;
 * Changes main image in page based on which tiny img has been clicked earlier
 * Makes use of local folder /paintings at the moment!
 */
-function change_main_img(src, id = 0) {
+function change_main_img(src, id = 'i0') {
     //change_random_imgs()
     document.querySelector('#i0').src = src;
     
     const areas = document.querySelector('[name=workmap]');
 
-    fetch(`./labels/img_${id}.txt`, {
+
+    //const origin = 'https://api.github.com/repos/BoazKwakkel/boazkwakkel.github.io/contents/labels'
+    const origin = './labels'
+
+    // TODO: Fix issue that it looks for img_i0.txt
+    fetch(`${origin}/img_${id.slice(1)}.txt`, {
         method: 'GET',
+        //mode: 'cors',
         headers : {
             Host: 'boazkwakkel.github.io',
-            Origin: 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
+            'Access-Control-Allow-Origin': 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
     }})
         .then((response) => response.text())
         .then((data) => console.log(data.split('\n')));
