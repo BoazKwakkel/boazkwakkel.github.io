@@ -1,0 +1,111 @@
+/* 
+TODO: Work on prettier padding between header and grid
+TODO: Style everything
+TODO: Hover effect
+*/
+
+
+/* .top-header { 
+	width: 100%; 
+	background-image: url("http://lh6.ggpht.com/1gH99j2GD85SW4r3CA18uwTDuRioMYTNZlH5N2xuZsbh_4QUnzxettm6WqCsLa_ciGCzhWwLzF35QtHEpz4M9LWv_yvl=w320"); 
+	background-size: cover; 
+	background-position: center; 
+    min-height: 260px;
+    height: 50vmin;
+    max-height: 110px;
+    display: block;
+}  */
+.container {
+    display: inline-block
+}
+
+.space {
+    width: 40px; 
+    height: 40px;
+}
+
+.head { 
+	width: 100%; 
+    height: 50vmin;
+	/*background-image: url("http://lh6.ggpht.com/1gH99j2GD85SW4r3CA18uwTDuRioMYTNZlH5N2xuZsbh_4QUnzxettm6WqCsLa_ciGCzhWwLzF35QtHEpz4M9LWv_yvl=w320");*/ 
+	object-position: 50% 50%;
+    object-fit: cover;
+    position: relative;
+    display: block;
+    top: 0;
+    left: 0;
+}
+
+.header {
+    color: white;
+    line-height: 1.2em;
+}
+
+.offset-parent {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.main-image {
+    max-width: 65%;
+    max-height: auto;
+    width: 65%;
+    height: auto;
+}
+
+.parent { 
+    display: grid; 
+    position: relative;
+    grid-template-columns: repeat(5, 1fr); 
+    grid-template-rows: repeat(2, 1fr); 
+    grid-column-gap: 2px;
+    grid-row-gap: 2px; 
+    background-color: white;
+    }
+
+.choices {
+    width:200px;
+    height: 200px;
+    overflow: hidden;
+    /* position: absolute; */
+    /* object-fit: cover; */
+}
+
+.div1 { 
+    grid-area: 1 / 1 / 3 / 3; 
+} 
+.div2 { 
+    grid-area: 1 / 3 / 2 / 4; 
+    /* width: 80%; */
+} 
+.div3 { 
+    grid-area: 1 / 4 / 2 / 5; 
+    /* width: 80%; */
+} 
+.div4 { 
+    grid-area: 1 / 5 / 2 / 6;
+    /* width: 80%; */
+} 
+.div5 { 
+    grid-area: 2 / 3 / 3 / 4;
+    /* width: 80%; */
+} 
+.div6 { 
+    grid-area: 2 / 4 / 3 / 5;
+    /* width: 80%; */
+} 
+.div7 { 
+    grid-area: 2 / 5 / 3 / 6; 
+    /* width: 80%; */
+} 
+
+/* .container {
+    grid-template-columns: 4rem 25% 1fr 1fr;
+    grid-template-rows: 100px auto auto auto;
+    grid-row: 2;
+    grid-row-start: 1;
+    grid-row-end: 4;
+    gap: 10px 15px;
+} */
