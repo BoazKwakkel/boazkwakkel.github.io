@@ -99,7 +99,7 @@ function add_random_imglink() {
     make_clickable();
    
     // set the first and random the next images
-    change_main_img(imgpath(0));//indexes[0]));
+    change_main_img(indexes[0]);
     change_random_imgs();   
 }
 
@@ -127,7 +127,7 @@ function create_box(array_of_arrays) {
     const workmap = document.querySelector("[name=workmap]")
 
     workmap.innerHTML = array_of_arrays.filter(a => a[0]).map(array => 
-        `<area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="">`
+        `<area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="${array[0]}">`
     ).reduce((s, v) => s + v, '');
     // Array(14)
     // 0: (5) [11, 378.197736, 319.0908, 39.933516000000004, 63.6364]
@@ -145,6 +145,8 @@ function create_box(array_of_arrays) {
     // 12: (5) [4, 298.999428, 253.40919999999997, 93.400713, 104.0908]
     // 13: (5) [NaN, NaN, NaN, NaN, NaN]
     // length: 14[[Prototype]]: Array(0)
+
+
 }
 
  
