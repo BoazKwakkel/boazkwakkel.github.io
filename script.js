@@ -37,7 +37,7 @@ function change_main_img(src, id = 'i0') {
     const origin = './labels'
 
     // TODO: Fix issue that it looks for img_i0.txt
-    fetch(`${origin}/img_${id.slice(1)}.txt`, {
+    fetch(`${origin}/img_${id}.txt`, {
         method: 'GET',
         //mode: 'cors',
         headers : {
