@@ -44,12 +44,13 @@ function change_main_img(src, sequence = '0') {
             Host: 'boazkwakkel.github.io',
             'Access-Control-Allow-Origin': 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
     }})
-        .then((response) => response.text())
-        .then((data) => data.split(/[\n\r]+/g))
-        .then((array) => array.map(v => get_coords(v.split().map(c => parseFloat(c) ))))
-        .then((array_of_arrays) => create_box())
+        .then((response) => response.text()) // Read through txt file
+        .then((data) => data.split(/[\n\r]+/g)) // Split lines
+        .then((array) => array.map(v => get_coords(v.split(' ').map(c => parseFloat(c) )))) // Split and make coordinates
+        .then((array_of_arrays) => create_box(array_of_arrays)) // Create clickable boxes from it
 }
  
+
 /**
 * Changes random choice of imgs after main image has been chosen
 * Makes use of local folder /paintings at the moment!
@@ -85,6 +86,7 @@ function make_clickable() {
     });
 }
  
+
 /**
 * Generates random choice of images to view from our image folder
 * Makes use of local folder /paintings at the moment!
@@ -101,6 +103,7 @@ function add_random_imglink() {
     change_random_imgs();   
 }
 
+
 /**
 * Prepares coordinates to become area
 */
@@ -108,7 +111,10 @@ function get_coords(coords) {
 
     // Multiply output times width and height from given image
     const img = document.querySelector("#i0");
-    return [coords[0], img.width * coords[1], img.height * coords[2], img.width * coords[3], img.height * coords[4]]
+    const width = img.offsetWidth;
+    const height = img.offsetHeight; 
+    console.log(width, height, coords);
+    return [coords[0], width * coords[1], height * coords[2], width * coords[3], height * coords[4]]
 }
 
 
@@ -117,8 +123,28 @@ function get_coords(coords) {
 * Creates clickable area boxes on main image
 */
 function create_box(array_of_arrays) {
-    console.log(array_of_arrays)
-    //array_of_arrays.forEach()
+    // console.log(array_of_arrays)
+    const workmap = document.querySelector("[name=workmap]")
+
+    workmap.innerHTML = array_of_arrays.filter(a => a[0]).map(array => 
+        `<area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="">`
+    ).reduce((s, v) => s + v, '');
+    // Array(14)
+    // 0: (5) [11, 378.197736, 319.0908, 39.933516000000004, 63.6364]
+    // 1: (5) [4, 17.2097877, 278.2576, 31.412073000000003, 56.818000000000005]
+    // 2: (5) [4, 273.60228, 341.5908, 54.637065, 35.909079999999996]
+    // 3: (5) [4, 377.863773, 320.1516, 39.2650713, 67.57560000000001]
+    // 4: (5) [4, 266.501277, 274.46959999999996, 57.477546, 22.57576]
+    // 5: (5) [4, 183.794163, 197.0456, 91.562919, 205.90920000000003]
+    // 6: (5) [4, 190.310232, 326.6668, 116.95966800000001, 51.212]
+    // 7: (5) [4, 218.79843300000002, 230.90920000000003, 26.5665771, 41.5152]
+    // 8: (5) [4, 35.0879403, 184.0908, 67.836783, 189.394]
+    // 9: (5) [4, 360.653706, 279.54560000000004, 73.01620199999999, 73.0304]
+    // 10: (5) [4, 93.233532, 278.86359999999996, 170.761227, 218.03040000000001]
+    // 11: (5) [4, 359.56802700000003, 345.9848, 76.85937, 50.151599999999995]
+    // 12: (5) [4, 298.999428, 253.40919999999997, 93.400713, 104.0908]
+    // 13: (5) [NaN, NaN, NaN, NaN, NaN]
+    // length: 14[[Prototype]]: Array(0)
 }
 
  

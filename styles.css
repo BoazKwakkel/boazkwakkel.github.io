@@ -131,4 +131,11 @@ grid-row-start: 1;
 grid-row-end: 4;
 gap: 10px 15px;
 } */
-.hide {display: none;}
+.hide {display: none}
+
+area:link, area:hover, area:active, area:focus {
+    border: 1px #f00 solid
+}
+a:link, a:hover, a:active, a:focus {
+    border: 1px #f00 solid
+}
