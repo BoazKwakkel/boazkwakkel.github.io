@@ -5,7 +5,7 @@
 // TODO: Linking clickable rectangle areas on main image to image choice -> trigger random_imglink function
  
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const nextimg = (i) => `paintings/img_${ i || random(10,32)}.jpg`;
+const nextimg = (i) => `paintings/img_${ i || random(0, 311)}.jpg`;
 if (!Array.prototype.shuffle) {
     Object.defineProperty(Array.prototype, 'shuffle', {
         value: function() {
@@ -17,7 +17,7 @@ if (!Array.prototype.shuffle) {
         }
     });
 }
-const indexes = Array.from({length:23}, (v, i) => i + 10).shuffle();
+const indexes = Array.from({length:311}, (v, i) => i).shuffle();
 const imgpath = (i) => `paintings/img_${ i }.jpg`;
 //Array(23).fill().map((v, i, a, c) => (c = random(0, a.length - 1), [a[i], a[c]] = [a[c], a[i]]))
  
@@ -78,10 +78,28 @@ function add_random_imglink() {
     make_clickable();
    
     // set the first and random the next images
-    change_main_img(imgpath(indexes[0]));
+    change_main_img(imgpath(0));//indexes[0]));
     change_random_imgs();   
 }
- 
+
+
+function get_coords() {
+    var coords = [0.947864, 0.797727, 0.100084, 0.159091]
+
+    // Multiply output times width and height from given image
+    const img = document.querySelector(".img0");
+    const width = img.width;
+    const height = img.height;
+
+    document.write(`<div class="box" style="position: absolute; left: ${width * coords[0]}; bottom: ${height * coords[1]}"></div>`);
+
+    console.log([width * coords[0], height * coords[1], width * coords[2], height * coords[3]])
+}
+
+function create_box() {
+
+}
+
  
 /**
 * Toggles the visibility of the 6 small images depending on if the main image is clicked
