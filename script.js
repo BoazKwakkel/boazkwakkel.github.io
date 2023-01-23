@@ -26,9 +26,21 @@ const imgpath = (i) => `paintings/img_${ i }.jpg`;
 * Changes main image in page based on which tiny img has been clicked earlier
 * Makes use of local folder /paintings at the moment!
 */
-function change_main_img(src) {
+function change_main_img(src, id = 0) {
     //change_random_imgs()
     document.querySelector('#i0').src = src;
+    
+    const areas = document.querySelector('[name=workmap]');
+
+    fetch(`./labels/img_${id}.txt`, {
+        method: 'GET',
+        headers : {
+            Host: 'boazkwakkel.github.io',
+            Origin: 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
+    }})
+        .then((response) => response.text())
+        .then((data) => console.log(data.split('\n')));
+    
 }
  
 /**
@@ -60,7 +72,7 @@ function make_clickable() {
  
         // When clicked, change clicked img to main img and display new img choice to chose from
         img.addEventListener('click', () => {
-            change_main_img(img.src);
+            change_main_img(img.src, img.id);
             change_random_imgs();
         })
     });
@@ -90,9 +102,6 @@ function get_coords() {
     const img = document.querySelector(".img0");
     const width = img.width;
     const height = img.height;
-
-    document.write(`<div class="box" style="position: absolute; left: ${width * coords[0]}; bottom: ${height * coords[1]}"></div>`);
-
     console.log([width * coords[0], height * coords[1], width * coords[2], height * coords[3]])
 }
 
