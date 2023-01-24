@@ -19,9 +19,19 @@ if (!Array.prototype.shuffle) {
 }
 const indexes = Array.from({length:311}, (v, i) => i).shuffle();
 const imgpath = (i) => `paintings/img_${ i }.jpg`;
-//Array(23).fill().map((v, i, a, c) => (c = random(0, a.length - 1), [a[i], a[c]] = [a[c], a[i]]))
- 
- 
+
+// Read categories from labels file
+const categories = (i) => fetch('labels/a_new_labels.txt', {
+    method: 'GET',
+    headers : {
+        Host: 'boazkwakkel.github.io',
+        'Access-Control-Allow-Origin': 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
+}})
+    .then((response) => response.text())
+    .then((data) => data.split(/[\n\r]+/g))
+    .then((array) => array.map(v => v.split(' ')))
+    .then((array_of_arrays) => console.log(array_of_arrays))
+
 /**
 * Changes main image in page based on which tiny img has been clicked earlier
 * Makes use of local folder /paintings at the moment!
@@ -31,7 +41,6 @@ function change_main_img(src, sequence = '0') {
     document.querySelector('#i0').src = src;
     
     const areas = document.querySelector('[name=workmap]');
-
 
     //const origin = 'https://api.github.com/repos/BoazKwakkel/boazkwakkel.github.io/contents/labels'
     const origin = './labels'
@@ -130,8 +139,9 @@ function create_box(array_of_arrays) {
     // console.log(array_of_arrays)
     const workmap = document.querySelector("[name=workmap]")
 
+    // Add img maps based on data
     workmap.innerHTML = array_of_arrays.filter(a => a[0]).map(array => 
-        `<area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="${array[0]}">`
+        `<area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="${categories(array[0])}">`
     ).reduce((s, v) => s + v, '');
     // Array(14)
     // 0: (5) [11, 378.197736, 319.0908, 39.933516000000004, 63.6364]
