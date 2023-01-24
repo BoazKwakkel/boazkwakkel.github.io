@@ -99,7 +99,7 @@ function add_random_imglink() {
     make_clickable();
    
     // set the first and random the next images
-    change_main_img(indexes[0]);
+    change_main_img(imgpath(indexes[0]), indexes[0]);
     change_random_imgs();   
 }
 
@@ -111,10 +111,14 @@ function get_coords(coords) {
 
     // Multiply output times width and height from given image
     const img = document.querySelector("#i0");
-    const width = img.offsetWidth;
-    const height = img.offsetHeight; 
-    console.log(width, height, coords);
-    return [coords[0], width * coords[1], height * coords[2], width * coords[3], height * coords[4]]
+    // const width = img.offsetWidth;
+    // const height = img.offsetHeight; 
+    // console.log(width, height, coords);
+
+    // Formule to calculate coordinates from algo results
+    const [x1, y1] = [img.offsetWidth * coords[1], img.offsetHeight * coords[2]]; 
+    const [x2, y2] = [x1 + img.offsetWidth * coords[3], y1 + img.offsetHeight * coords[4]];
+    return [coords[0], x1, y1, x2, y2]
 }
 
 
