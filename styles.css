@@ -143,7 +143,10 @@ gap: 10px 15px;
 
 area, area:link, area:hover, area:active, area:focus {
     border: 1px #f00 solid;
+    background-color: red;
+    opacity:0.25;
     position: absolute;
+    border-radius: 10%;
 }
 a, a:link, a:hover, a:active, a:focus {
     border: 1px #f00 solid;
