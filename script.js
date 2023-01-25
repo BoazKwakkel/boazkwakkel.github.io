@@ -23,8 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const [labels, paintings, newlines, undigit] = ['./labels', './paintings', /[\n\r]+/g, /[^\d]*/g];
     const IMG_COUNT = 311;
     const indexes = Array.from({length: IMG_COUNT}, (v, i) => i).shuffle();
+    const random = (min = 0, max = IMG_COUNT) => Math.floor(Math.random() * (max - min + 1)) + min;
+
     //const nextimg = (i) => `paintings/img_${ i || random()}.jpg`;
-    const imgpath = (i) => `${paintings}/img_${ i }.jpg`;
+    const imgpath = (i) => `${paintings}/img_${ i || random()}.jpg`;
 
     // this elements are often use, retrieve the values only once
     const mainImg = document.querySelector('#i0');
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(result => Promise.resolve(result)))();
     const goto = (i) => links.then(link => change_random_imgs(link[i]));
 
-        /**
+    /**
     * Changes main image in page based on which tiny img has been clicked earlier
     * Makes use of local folder /paintings at the moment!
     */
@@ -60,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     * Makes use of local folder /paintings at the moment!
     */
     function change_random_imgs(array = indexes) {
-        //flips the first images to front - indexes is already randomized
+        // flips the first images to front - indexes is already randomized
         const images = choices.length;
         array.splice(0, 0, ...array.splice(-images)).filter((v,i) => i < images);
                 
@@ -95,12 +97,17 @@ document.addEventListener("DOMContentLoaded", () => {
     function create_boxes(array_of_arrays) {
         // we work here with innerHTML...
         workmap.innerHTML = array_of_arrays.map(array => 
-            `<div><area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="javascript:void(0)"/></div>`
+            `
+            <area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="javascript:void(0)"
+                  style="left: ${array[0]}px; top: ${array[1]}px; width: ${array[2] - array[0]}px; height: ${array[3] - array[1]}px;"
+            />
+            `
         ).reduce((s, v) => s + v, '');
         // ... so after building the DOM, we must search the dom to add listeners.
         [...document.querySelectorAll("area")].forEach(el => {
             el.addEventListener('click', () => goto(parseInt(el.alt)));
-            buildborder(workmap, el.parentNode, el.coords);
+            console.log(el);
+            //buildborder(workmap, el);
         });
 
         /*
@@ -140,7 +147,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         // make the main imgs toggable
         mainImg.addEventListener('click', () => {
-            choices.forEach(function checkView(el) {el.classList.toggle('hide')});
+            change_random_imgs();
+            //choices.forEach(function checkView(el) {el.classList.toggle('hide')});
         });
         mainImg.addEventListener('error', () => mainImg.style.visibility='hidden');
         mainImg.addEventListener('load', () => mainImg.style.visibility='visible');
@@ -168,10 +176,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function buildborder(map, area, coordinates){
     const coords = [String(coordinates || area.coords).split(",").map(v => parseInt(v))];
-    area.style.left = coords[0] + "px";
-    area.style.top = coords[1] + "px";
-    area.style.width = coords[2] - coords[0] + "px";
-    area.style.height = coords[3] - coords[1] + "px";
+    const style = area.style;
+    style.left = coords[0] + "px";
+    style.top = coords[1] + "px";
+    style.width = coords[2] - coords[0] + "px";
+    style.height = coords[3] - coords[1] + "px";
+    area.betty = 'ist schön';
     console.log(area, coords);
 }
         
