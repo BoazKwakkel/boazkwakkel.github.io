@@ -79,13 +79,67 @@ document.addEventListener("DOMContentLoaded", () => {
     */
     function get_coords(coords) {
 
+        //Umrechnung
+        /*
+            Darknet label format: [label_index, xcenter, ycenter, w, h] (Relative coordinates)
+            For example:          [4 0.0431323 0.695644 0.078727 0.142045]
+            xmin: top-left x coordinate,
+            ymin: top-left y coordinate,
+            w: bounding box width,
+            h: bounding box height,
+            w_img: image width,
+            h_img: image height
+
+            xcenter = (xmin + w/2) / w_img  | xmin = (xcenter * w_img) - w/2
+            ycenter = (ymin + h/2) / h_img  | ymin = (ycenter * h_img) - h/2
+            w = w / w_img                   | w * w_img
+            h = h / h_img                   | h * h_img
+        */
+
+        /*
+        const img_width = 640;
+        const img_height = 480;
+
+        const x_center = 0.0431323;
+        const y_center = 0.695644;
+        const width = 0.078727;
+        const height = 0.142045;
+
+        // calculate x, y, w, h
+        const x = Math.round((x_center - width/2) * img_width);
+        const y = Math.round((y_center - height/2) * img_height);
+        const w = Math.round(width * img_width);
+        const h = Math.round(height * img_height);
+        */
+
+        /*
+        const [width, height] = [img.offsetWidth, img.offsetHeight];
+        const x1 = Math.round((coords[1] - coords[3]/2) * width);
+        const y1 = Math.round((coords[2] - coords[4]/2) * height);
+        const x2 = Math.round(coords[3] * width) + x1;
+        const y2 = Math.round(coords[4] * height) + y1;
+        */
+
+
         // Multiply output times width and height from given image
         const img = mainImg;
-        const [width, height] = [img.offsetWidth, img.offsetHeight]; 
-        const [x1, y1] = [img.offsetWidth * coords[1], img.offsetHeight * coords[2]]; 
-        const [x2, y2] = [x1 + img.offsetWidth * coords[3], y1 + img.offsetHeight * coords[4]];
+        const [width, height] = [img.offsetWidth, img.offsetHeight];
+
+        // const x1 = (coords[1] - coords[3] / 2) * width;
+        // const y1 = (coords[2] - coords[4] / 2) * height;
+        // const x2 = coords[3] * width + x1;
+        // const y2 = coords[4] * height + y1;
+
+        const [x1, y1] = [(coords[1] - coords[3] / 2) * width, (coords[2] - coords[4] / 2) * height]; 
+        const [x2, y2] = [(coords[1] + coords[3] / 2) * width, (coords[2] + coords[4] / 2) * height]
+
+
+        // const [width, height] = [img.offsetWidth, img.offsetHeight]; 
+        // const [x1, y1] = [img.offsetWidth * coords[1], img.offsetHeight * coords[2]]; 
+        // const [x2, y2] = [x1 + img.offsetWidth * coords[3], y1 + img.offsetHeight * coords[4]];
         const result = [coords[0], Math.round(x1),Math.round(y1),Math.round(x2),Math.round(y2)]; 
         console.log(width, height, result);
+        console.log((coords[1] + coords[3]/2) / width, (coords[2] + coords[4]/2) / height);
         return result;
     }
 
@@ -96,15 +150,17 @@ document.addEventListener("DOMContentLoaded", () => {
     */
     function create_boxes(array_of_arrays) {
         // we work here with innerHTML...
+        const tag = 'area';
         workmap.innerHTML = array_of_arrays.map(array => 
             `
-            <area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="javascript:void(0)"
-                  style="left: ${array[0]}px; top: ${array[1]}px; width: ${array[2] - array[0]}px; height: ${array[3] - array[1]}px;"
+            <${tag} shape="rect" coords="${array[1]},${array[2]},${array[3] - array[1]},${array[4] - array[2]}" alt="${array[0]}" href="javascript:void(0)"
+                  style="left: ${array[1]}px; top: ${array[2]}px; width: ${array[3] - array[1]}px; height: ${array[4] - array[2]}px;"
             />
             `
+            // style="left: ${array[1]}px; top: ${array[2]}px; width: ${array[3] - array[1]}px; height: ${array[4] - array[2]}px;"
         ).reduce((s, v) => s + v, '');
         // ... so after building the DOM, we must search the dom to add listeners.
-        [...document.querySelectorAll("area")].forEach(el => {
+        [...document.querySelectorAll(tag)].forEach(el => {
             el.addEventListener('click', () => goto(parseInt(el.alt)));
             console.log(el);
             //buildborder(workmap, el);
@@ -133,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
     * Run only once: Searches for images in document
     * Makes them clickable so that once clicked, main image will be changed to clicked image
     * Makes them hides on error and shows on load
+    * Like __init__ function
     */
     function make_clickable() {
         // make the 6 imgs to chose from clickable
@@ -152,6 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         mainImg.addEventListener('error', () => mainImg.style.visibility='hidden');
         mainImg.addEventListener('load', () => mainImg.style.visibility='visible');
+
+        document.getElementById("change-main-img").addEventListener('click', () => {
+            const chosen = random()
+            change_main_img(imgpath(indexes[chosen]), indexes[chosen]);
+        });
     }
 
 
@@ -168,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // set the first image and choices randomly
         change_main_img(imgpath(indexes[0]), indexes[0]);
         change_random_imgs();  
-        links.then(console.log); 
+        // links.then(console.log); 
     }
     add_random_imglink();
 
