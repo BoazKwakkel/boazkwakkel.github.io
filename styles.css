@@ -140,13 +140,26 @@ grid-row-end: 4;
 gap: 10px 15px;
 } */
 .hide {display: none}
+map {
+    position: absolute;
+}
 
-area, area:link, area:hover, area:active, area:focus {
+area {
+    position: absolute;
+    border-radius: 10%;
+}
+
+div#img-main-parent:hover map area {
+    opacity: 0.25;
+    background-color: green;
+}
+
+/* area, area:link, area:hover, area:active, area:focus {
     border: 1px #f00 solid;
     background-color: red;
     opacity:0.25;
     position: absolute;
-    border-radius: 10%;
+    border-radius: 20%;
 }
 a, a:link, a:hover, a:active, a:focus {
     border: 1px #f00 solid;
@@ -168,4 +181,4 @@ map:hover {
     border: 1px solid blue !important;
     cursor: pointer;
 }
- 
+  */
