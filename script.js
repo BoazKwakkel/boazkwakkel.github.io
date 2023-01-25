@@ -3,186 +3,184 @@
 // TODO: Read data from DB to display information for img
 // TODO: Generating clickable rectangle areas on main image
 // TODO: Linking clickable rectangle areas on main image to image choice -> trigger random_imglink function
- 
-const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const nextimg = (i) => `paintings/img_${ i || random(0, 311)}.jpg`;
-if (!Array.prototype.shuffle) {
-    Object.defineProperty(Array.prototype, 'shuffle', {
-        value: function() {
-            for (let i = this.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [this[i], this[j]] = [this[j], this[i]];
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Extends Array functionality
+    if (!Array.prototype.shuffle) {
+        Object.defineProperty(Array.prototype, 'shuffle', {
+            value: function() {
+                for (let i = this.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this[i], this[j]] = [this[j], this[i]];
+                }
+                return this;
             }
-            return this;
-        }
-    });
+        });
+    }
+
+    // Define consts
+    const [labels, paintings, newlines, undigit] = ['./labels', './paintings', /[\n\r]+/g, /[^\d]*/g];
+    const IMG_COUNT = 311;
+    const indexes = Array.from({length: IMG_COUNT}, (v, i) => i).shuffle();
+    //const nextimg = (i) => `paintings/img_${ i || random()}.jpg`;
+    const imgpath = (i) => `${paintings}/img_${ i }.jpg`;
+
+    // this elements are often use, retrieve the values only once
+    const mainImg = document.querySelector('#i0');
+    const choices = [...document.querySelectorAll('.choices')];
+    const workmap = document.querySelector("[name=workmap]");
+
+    const links = (async () => await fetch(`${labels}/a_new_labels.txt`)
+        .then(response => response.text())
+        .then(text => text.split(newlines))
+        .then(lines => lines.filter(line => line))
+        .then(array => array.map(line => line.split(' ').slice(1).map(str => parseInt(str.replace(undigit, '')) || 0)))
+        .then(result => Promise.resolve(result)))();
+    const goto = (i) => links.then(link => change_random_imgs(link[i]));
+
+        /**
+    * Changes main image in page based on which tiny img has been clicked earlier
+    * Makes use of local folder /paintings at the moment!
+    */
+    function change_main_img(src, sequence = '0') {
+        //change_random_imgs()
+        mainImg.src = src;
+        
+        fetch(`${labels}/img_${sequence}.txt`)
+            .then((response) => response.text()) // Read through txt file
+            .then((text) => text.split(newlines)) // Split lines
+            .then((array) => array.map(v => get_coords(v.split(' ').map(c => parseFloat(c) )))) // Split and make coordinates
+            .then((array_of_arrays) => create_boxes(array_of_arrays.filter(a => a[0]))) // Create clickable boxes from it
+    }
+ 
+
+    /**
+    * Changes random choice of imgs after main image has been chosen
+    * Makes use of local folder /paintings at the moment!
+    */
+    function change_random_imgs(array = indexes) {
+        //flips the first images to front - indexes is already randomized
+        const images = choices.length;
+        array.splice(0, 0, ...array.splice(-images)).filter((v,i) => i < images);
+                
+        // Get all choices and change their sources. Set an attr to get the index later 
+        choices.forEach((img, i) => {
+            img.src = imgpath(array[i]);
+            img.setAttribute('img-seq', array[i]);
+        });
+    }; 
+
+
+    /**
+    * Prepares coordinates to become area
+    */
+    function get_coords(coords) {
+
+        // Multiply output times width and height from given image
+        const img = mainImg;
+        const [width, height] = [img.offsetWidth, img.offsetHeight]; 
+        const [x1, y1] = [img.offsetWidth * coords[1], img.offsetHeight * coords[2]]; 
+        const [x2, y2] = [x1 + img.offsetWidth * coords[3], y1 + img.offsetHeight * coords[4]];
+        const result = [coords[0], Math.round(x1),Math.round(y1),Math.round(x2),Math.round(y2)]; 
+        console.log(width, height, result);
+        return result;
+    }
+
+
+    /**
+    * Takes array of arrays
+    * Creates clickable area boxes on main image
+    */
+    function create_boxes(array_of_arrays) {
+        // we work here with innerHTML...
+        workmap.innerHTML = array_of_arrays.map(array => 
+            `<div><area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="javascript:void(0)"/></div>`
+        ).reduce((s, v) => s + v, '');
+        // ... so after building the DOM, we must search the dom to add listeners.
+        [...document.querySelectorAll("area")].forEach(el => {
+            el.addEventListener('click', () => goto(parseInt(el.alt)));
+            buildborder(workmap, el.parentNode, el.coords);
+        });
+
+        /*
+        //Temporary code - for testing only
+        document.querySelector("#draggable-items").innerHTML = array_of_arrays.map(array => array.map(v => Math.round(v))).map(array =>
+            `
+            <div class="draggable">
+                <div class="header" style="top:${array[1]}px; left:${array[2]}px; right:${array[3]}px; bottom:${array[4]}px;">
+                    ${array[0]} ${array[1]} ${array[2]} ${array[3]} ${array[4]}
+                </div>
+                <span></span>
+            </div>
+            `
+        ).reduce((s, v) => s + v, '');
+
+        [...document.querySelectorAll("div.draggable")].forEach(el => dragElement(el));
+        //`<div style="position:absolute; top:${array[1]}px; left:${array[2]}px; width:${array[3]}px; height:${array[4]}px;" alt="${array[0]}" href="${array[0]}"></div>`
+        */
+    }
+
+
+    /**
+    * Run only once: Searches for images in document
+    * Makes them clickable so that once clicked, main image will be changed to clicked image
+    * Makes them hides on error and shows on load
+    */
+    function make_clickable() {
+        // make the 6 imgs to chose from clickable
+        choices.forEach((img) => {
+            // When clicked, change clicked img to main img and display new img source to chose from
+            img.addEventListener('click', () => {
+                change_main_img(img.src, parseInt(img.getAttribute('img-seq')));
+                change_random_imgs();
+            });
+            img.addEventListener('error', () => img.style.visibility='hidden');
+            img.addEventListener('load', () => img.style.visibility='visible');
+        });
+        // make the main imgs toggable
+        mainImg.addEventListener('click', () => {
+            choices.forEach(function checkView(el) {el.classList.toggle('hide')});
+        });
+        mainImg.addEventListener('error', () => mainImg.style.visibility='hidden');
+        mainImg.addEventListener('load', () => mainImg.style.visibility='visible');
+    }
+
+
+ 
+    /**
+    * Generates random choice of images to view from our image folder
+    * Makes use of local folder /paintings at the moment!
+    */
+    function add_random_imglink() {
+        // TODO: Make this choice dependent on data from DB and main img
+        // Setup the images: Add click interaction to images
+        make_clickable();
+
+        // set the first image and choices randomly
+        change_main_img(imgpath(indexes[0]), indexes[0]);
+        change_random_imgs();  
+        links.then(console.log); 
+    }
+    add_random_imglink();
+
+}); 
+
+function buildborder(map, area, coordinates){
+    const coords = [String(coordinates || area.coords).split(",").map(v => parseInt(v))];
+    area.style.left = coords[0] + "px";
+    area.style.top = coords[1] + "px";
+    area.style.width = coords[2] - coords[0] + "px";
+    area.style.height = coords[3] - coords[1] + "px";
+    console.log(area, coords);
 }
-const indexes = Array.from({length:311}, (v, i) => i).shuffle();
-const imgpath = (i) => `paintings/img_${ i }.jpg`;
-
-// Read categories from labels file
-const categories = (i) => fetch('labels/a_new_labels.txt', {
-    method: 'GET',
-    headers : {
-        Host: 'boazkwakkel.github.io',
-        'Access-Control-Allow-Origin': 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
-}})
-    .then((response) => response.text())
-    .then((data) => data.split(/[\n\r]+/g))
-    .then((array) => array.map(v => v.split(' ')))
-    .then((array_of_arrays) => console.log(array_of_arrays))
-
-/**
-* Changes main image in page based on which tiny img has been clicked earlier
-* Makes use of local folder /paintings at the moment!
-*/
-function change_main_img(src, sequence = '0') {
-    //change_random_imgs()
-    document.querySelector('#i0').src = src;
-    
-    const areas = document.querySelector('[name=workmap]');
-
-    //const origin = 'https://api.github.com/repos/BoazKwakkel/boazkwakkel.github.io/contents/labels'
-    const origin = './labels'
-
-    // TODO: Fix issue that it looks for img_i0.txt
-    fetch(`${origin}/img_${sequence}.txt`, {
-        method: 'GET',
-        //mode: 'cors',
-        headers : {
-            Host: 'boazkwakkel.github.io',
-            'Access-Control-Allow-Origin': 'file:///Users/yvette/Coding/Q42/boazkwakkel.github.io/index.html'
-    }})
-        .then((response) => response.text()) // Read through txt file
-        .then((data) => data.split(/[\n\r]+/g)) // Split lines
-        .then((array) => array.map(v => get_coords(v.split(' ').map(c => parseFloat(c) )))) // Split and make coordinates
-        .then((array_of_arrays) => create_box(array_of_arrays)) // Create clickable boxes from it
-}
- 
-
-/**
-* Changes random choice of imgs after main image has been chosen
-* Makes use of local folder /paintings at the moment!
-*/
-function change_random_imgs() {
-               
-    const images = [...document.querySelectorAll('.choices')];
-    //flips the first images to front
-    indexes.splice(0, 0, ...indexes.splice(-images.length)).filter((v,i) => i < images.length);
-               
-    // Get all imgs and change to new random choice
-    images.forEach((img, i) => {
-        img.src = imgpath(indexes[i]);
-        img.setAttribute('img-sequence', indexes[i]);
-    });
-}; 
-
-
-/**
-* Searches for images in document
-* Makes them clickable so that once clicked, main image will be changed to clicked image
-*/
-function make_clickable() {
- 
-    // Search for 6 imgs to chose from
-    [...document.querySelectorAll('.choices')].forEach((img) => {
- 
-        // When clicked, change clicked img to main img and display new img choice to chose from
-        img.addEventListener('click', () => {
-            change_main_img(img.src, img.getAttribute('img-sequence'));
-            change_random_imgs();
-        })
-    });
-}
- 
-
-/**
-* Generates random choice of images to view from our image folder
-* Makes use of local folder /paintings at the moment!
-*/
-function add_random_imglink() {
-    // TODO: Make this choice dependent on data from DB and main img
-
-
-    // Add click interaction to images
-    make_clickable();
-   
-    // set the first and random the next images
-    change_main_img(imgpath(indexes[0]), indexes[0]);
-    change_random_imgs();   
-}
-
-
-/**
-* Prepares coordinates to become area
-*/
-function get_coords(coords) {
-
-    // Multiply output times width and height from given image
-    const img = document.querySelector("#i0");
-    // const width = img.offsetWidth;
-    // const height = img.offsetHeight; 
-    // console.log(width, height, coords);
-
-    // Formule to calculate coordinates from algo results
-    const [x1, y1] = [img.offsetWidth * coords[1], img.offsetHeight * coords[2]]; 
-    const [x2, y2] = [x1 + img.offsetWidth * coords[3], y1 + img.offsetHeight * coords[4]];
-    return [coords[0], x1, y1, x2, y2]
-}
-
-
-/**
-* Takes array of arrays
-* Creates clickable area boxes on main image
-*/
-function create_box(array_of_arrays) {
-    // console.log(array_of_arrays)
-    const workmap = document.querySelector("[name=workmap]")
-
-    // Add img maps based on data
-    workmap.innerHTML = array_of_arrays.filter(a => a[0]).map(array => 
-        `<area shape="rect" coords="${array[1]},${array[2]},${array[3]},${array[4]}" alt="${array[0]}" href="${categories(array[0])}">`
-    ).reduce((s, v) => s + v, '');
-    // Array(14)
-    // 0: (5) [11, 378.197736, 319.0908, 39.933516000000004, 63.6364]
-    // 1: (5) [4, 17.2097877, 278.2576, 31.412073000000003, 56.818000000000005]
-    // 2: (5) [4, 273.60228, 341.5908, 54.637065, 35.909079999999996]
-    // 3: (5) [4, 377.863773, 320.1516, 39.2650713, 67.57560000000001]
-    // 4: (5) [4, 266.501277, 274.46959999999996, 57.477546, 22.57576]
-    // 5: (5) [4, 183.794163, 197.0456, 91.562919, 205.90920000000003]
-    // 6: (5) [4, 190.310232, 326.6668, 116.95966800000001, 51.212]
-    // 7: (5) [4, 218.79843300000002, 230.90920000000003, 26.5665771, 41.5152]
-    // 8: (5) [4, 35.0879403, 184.0908, 67.836783, 189.394]
-    // 9: (5) [4, 360.653706, 279.54560000000004, 73.01620199999999, 73.0304]
-    // 10: (5) [4, 93.233532, 278.86359999999996, 170.761227, 218.03040000000001]
-    // 11: (5) [4, 359.56802700000003, 345.9848, 76.85937, 50.151599999999995]
-    // 12: (5) [4, 298.999428, 253.40919999999997, 93.400713, 104.0908]
-    // 13: (5) [NaN, NaN, NaN, NaN, NaN]
-    // length: 14[[Prototype]]: Array(0)
-
-
-}
-
- 
-/**
-* Toggles the visibility of the 6 small images depending on if the main image is clicked
-* Requires that images cointain style attribute {display: block} or {display: none}
-*/
-function toggle() {
- 
-    // Find all img elements that can be toggled
-    [...document.querySelectorAll(".choices")].forEach(function checkView(el) {
-                               el.classList.toggle('hide');
-    })
-}
- 
- 
+        
  
  
 /*************************************************************************************************/
 /** LIKE MAIN
 *
- * When page is fully loaded, make small images clickable
+* When page is fully loaded, make small images clickable
 */
  
 // Generate main image in page
@@ -193,4 +191,4 @@ function toggle() {
  
 // Add links to random images
 //add_random_imglink();
-document.addEventListener("DOMContentLoaded", add_random_imglink);
+//document.addEventListener("DOMContentLoaded", add_random_imglink);

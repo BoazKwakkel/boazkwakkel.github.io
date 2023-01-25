@@ -2,14 +2,18 @@
 <!-- saved from url=(0030)https://boazkwakkel.github.io/ -->
 <html>
   <head>
+
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width" />
-
     <title>StudioLinked</title>
+    
+    <!--link rel="stylesheet" href="./draggable.css" type="text/css">
+    <script src="./draggable.js"></script-->
+
     <link rel="stylesheet" href="./styles.css" type="text/css">
     <script src="./script.js"></script>
   </head>
@@ -19,16 +23,32 @@
       <div class="header">
         <h1>Studio Linked</h1>
       </div>
+      <span class="space">Fill</span>
       <p>Demo version of the StudioLinked platform conducted for the University of Amsterdam.</p>
       <div class="parent">
       <!-- Main image where users will be able to click on -->
         <!-- <button class="obj" style="border: solid black" onclick="get_coords()"></button> -->
-
         <div id="img-main-parent">
-        <map name="workmap"></map>
-        <img class="img0 main-image" id="i0" src="" usemap="#workmap">
-      </div>
-
+          <!--div id="draggable-items"></div-->
+          <map name="workmap">
+            <!-- From the text files... -->
+            <!-- 11 0.947864 0.797727 0.100084 0.159091
+                  4 0.0431323 0.695644 0.078727 0.142045
+                  4 0.68572 0.853977 0.136935 0.0897727
+                  4 0.947027 0.800379 0.0984087 0.168939 
+                  ...
+            -->
+            <!-- ..., make a workmap-->
+            <!-- 
+                 <area shape="rect" coords="0.947864 0.797727 0.100084 0.159091" alt="Computer" href="javascript:load(11)">
+                 <area shape="rect" coords="290,172,333,250" alt="Phone" href="phone.htm">
+                 <area shape="rect" coords="337,300,44" alt="Coffee" href="coffee.htm">
+                 <area shape="rect"
+                 ... 
+            -->
+          </map>
+          <img class="img0 main-image" id="i0" src="" usemap="#workmap">
+        </div>
         <img class="img1 choices" id="i1" src="">
         <img class="img2 choices" id="i2" src="">
         <img class="img3 choices" id="i3" src="">
