@@ -11,6 +11,7 @@
 
     <title>StudioLinked</title>
     <link rel="stylesheet" href="./styles.css" type="text/css">
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
     <script src="./script.js"></script>
   </head>
   <body>
@@ -19,11 +20,16 @@
       <div class="header">
         <h1>Studio Linked</h1>
       </div>
-      <p>Demo version of the StudioLinked platform conducted for the University of Amsterdam.</p>
+      <p>Welcome to StudioLinked! Feel free to explore. All images below are clickable. <br>
+        This is an exploration method that will allow you to click on the <b>green boxes</b> that appear if you <b>hover</b> over the large image on the left to find images containing similar objects as the one clicked previously.<br> 
+        The images on the right allow for further exploration. If you feel stuck, you can use <b>'Change Image'</b> to get a new randomized choice of images!
+        <br>
+        Enjoy!</p>
       <div class="parent">
       <!-- Main image where users will be able to click on -->
         <!-- <button class="obj" style="border: solid black" onclick="get_coords()"></button> -->
 
+        <button id="change-main-img">Change image</button>
         <div id="img-main-parent">
           <map name="workmap"></map>
           <img class="img0 main-image" id="i0" src="" usemap="#workmap">
@@ -36,7 +42,6 @@
         <img class="img5 choices" id="i5" src="">
         <img class="img6 choices" id="i6" src="">
       </div>
-      <button id="change-main-img">Change image</button>
     </div>
   </body></html>
  

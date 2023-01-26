@@ -152,7 +152,11 @@ area {
 div#img-main-parent:hover map area {
     opacity: 0.25;
     background-color: green;
+    margin: black;
+    border: 2px solid black;
 }
+
+
 
 /* area, area:link, area:hover, area:active, area:focus {
     border: 1px #f00 solid;
