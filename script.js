@@ -21,9 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Define consts
     const [labels, paintings, newlines, undigit] = ['./labels', './paintings', /[\n\r]+/g, /[^\d]*/g];
-    const IMG_COUNT = 311;
+    const IMG_COUNT = 191;
     const indexes = Array.from({length: IMG_COUNT}, (v, i) => i).shuffle();
-    const random = (min = 0, max = IMG_COUNT) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const random = (min = 1, max = IMG_COUNT) => Math.floor(Math.random() * (max - min + 1)) + min;
 
     //const nextimg = (i) => `paintings/img_${ i || random()}.jpg`;
     const imgpath = (i) => `${paintings}/img_${ i || random()}.jpg`;
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const choices = [...document.querySelectorAll('.choices')];
     const workmap = document.querySelector("[name=workmap]");
 
-    const links = (async () => await fetch(`${labels}/a_new_labels.txt`)
+    const links = (async () => await fetch(`${labels}/all_labels.txt`)
         .then(response => response.text())
         .then(text => text.split(newlines))
         .then(lines => lines.filter(line => line))
